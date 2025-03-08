@@ -1,4 +1,4 @@
-package com.example.android_labs
+package com.example.android_labs_sem4
 
 import android.os.Bundle
 import android.widget.Button
