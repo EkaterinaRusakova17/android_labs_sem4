@@ -1,4 +1,4 @@
-package com.example.android_labs
+package com.example.android_labs_sem4
 
 import android.view.LayoutInflater
 import android.view.View
