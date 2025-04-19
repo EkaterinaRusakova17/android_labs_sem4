@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.android_labs_sem4"
-    compileSdk = 34
+    namespace = "com.example.android_labs"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.android_labs_sem4"
+        applicationId = "com.example.android_labs"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -37,6 +37,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
