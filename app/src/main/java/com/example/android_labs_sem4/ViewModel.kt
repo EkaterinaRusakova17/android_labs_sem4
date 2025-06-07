@@ -1,18 +1,14 @@
-package com.example.android_labs_sem4
+package com.example.android_labs
 
-import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 class ViewModel(
-    private val service: OpenWeatherMapService,
-    private val resources: Resources
+    private val service: OpenWeatherMapService = RetrofitClient.weatherService
 ) : ViewModel() {
 
     private val _forecastData = MutableLiveData<List<ForecastItem>>()
@@ -25,20 +21,20 @@ class ViewModel(
     val isCelsius: LiveData<Boolean> = _isCelsius
 
     fun fetchWeather(city: String) {
-        val apiKey = "xxx"
-        val call = service.getForecast(city, "metric", apiKey)
+        val call = service.getForecast(city)
 
         call.enqueue(object : Callback<Forecast> {
             override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
-                when {
-                    response.code() == 404 ->
-                        _toastMessage.value = "Город не найден"
-                    response.body() == null ->
-                        _toastMessage.value = "Ошибка формата данных"
-                }
                 if (response.isSuccessful) {
-                    response.body()?.list?.let {
-                        _forecastData.value = it
+                    response.body()?.list?.let { forecastList ->
+                        _forecastData.value = forecastList
+                    } ?: run {
+                        _toastMessage.value = "Ошибка формата данных"
+                    }
+                } else {
+                    _toastMessage.value = when (response.code()) {
+                        404 -> "Город не найден"
+                        else -> "Ошибка сервера: ${response.code()}"
                     }
                 }
             }
@@ -60,13 +56,4 @@ class ViewModel(
     fun toggleTemperatureUnit() {
         _isCelsius.value = !(_isCelsius.value ?: true)
     }
-}
-
-interface OpenWeatherMapService {
-    @GET("forecast")
-    fun getForecast(
-        @Query("q") city: String,
-        @Query("units") units: String,
-        @Query("appid") apiKey: String
-    ): Call<Forecast>
 }
