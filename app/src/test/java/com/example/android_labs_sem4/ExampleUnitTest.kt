@@ -1,4 +1,4 @@
-package com.example.android_labs_sem4
+package com.example.android_labs
 
 import org.junit.Test
 
